@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rg_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rb_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/left"
+            android:textSize="32sp"
+            android:checked="true"/>
+        <RadioButton
+            android:id="@+id/rb_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="@string/right"
+            android:textSize="32sp"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <CheckedTextView
+            android:id="@+id/ctv_milk"
+            android:textAlignment="center"
+            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/milk"
+            android:textSize="32sp"
+            android:ellipsize="marquee"/>
+
+        <EditText
+            android:id="@+id/et_ml"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="60"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:hint="@string/ml"/>
+    </LinearLayout>
+</LinearLayout>

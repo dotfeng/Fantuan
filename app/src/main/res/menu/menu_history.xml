@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_statistics"
+        android:icon="@drawable/ic_chart_bar_white_48dp"
+        android:title="@string/statistics"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_shit"
+        android:icon="@drawable/icons8_poo_grey_96"
+        android:title="@string/shit"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sleep"
+        android:icon="@drawable/ic_sleep_grey600_48dp"
+        android:title="@string/sleep"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_eat"
+        android:icon="@drawable/ic_emoticon_tongue_black_48dp"
+        android:title="@string/eat"
+        android:checked="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_weight"
+        android:icon="@drawable/icons8_weightlifting_grey"
+        android:title="@string/weight"
+        app:showAsAction="never" />
+</menu>

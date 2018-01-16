@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_shit"
+        android:icon="@drawable/menu_main_shit_selector"
+        android:title="@string/shit"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_sleep"
+        android:icon="@drawable/menu_main_sleep_selector"
+        android:title="@string/sleep"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_weight"
+        android:icon="@drawable/icons8_weightlifting_grey"
+        android:title="@string/weight"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_history"
+        android:icon="@drawable/ic_history_white_48dp"
+        android:title="@string/history"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add_sleep"
+        android:icon="@drawable/ic_sleep_grey600_48dp"
+        android:title="@string/add_sleep"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_add_eat"
+        android:icon="@drawable/ic_emoticon_tongue_grey600_48dp"
+        android:title="@string/add_eat"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_add_shit"
+        android:icon="@drawable/icons8_poo_grey_96"
+        android:title="@string/add_shit"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_add_weight"
+        android:icon="@drawable/icons8_weightlifting_grey"
+        android:title="@string/add_weight"
+        app:showAsAction="never"/>
+</menu>

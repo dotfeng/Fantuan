@@ -1,0 +1,129 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:4198115716452750477",
+      "lastPropertyId": "6:7763356806163910297",
+      "name": "EatMilk",
+      "properties": [
+        {
+          "id": "1:1469648958211849469",
+          "name": "id"
+        },
+        {
+          "id": "2:6654788716022402083",
+          "name": "start"
+        },
+        {
+          "id": "3:3960816187765065377",
+          "name": "end"
+        },
+        {
+          "id": "4:4093455493289513993",
+          "name": "left"
+        },
+        {
+          "id": "5:1583792486648699228",
+          "name": "ml"
+        },
+        {
+          "id": "6:7763356806163910297",
+          "name": "duration"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:977229515542646200",
+      "lastPropertyId": "4:6460877951563895208",
+      "name": "Sleep",
+      "properties": [
+        {
+          "id": "1:3197911397821741990",
+          "name": "id"
+        },
+        {
+          "id": "2:9150313308478357480",
+          "name": "sleep"
+        },
+        {
+          "id": "3:7043172407789602031",
+          "name": "time"
+        },
+        {
+          "id": "4:6460877951563895208",
+          "name": "duration"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8069002334682671794",
+      "lastPropertyId": "5:7672996840515902568",
+      "name": "Shit",
+      "properties": [
+        {
+          "id": "1:4143670800715330273",
+          "name": "id"
+        },
+        {
+          "id": "3:3918859988192357275",
+          "name": "status"
+        },
+        {
+          "id": "4:82286923608366317",
+          "name": "time"
+        },
+        {
+          "id": "5:7672996840515902568",
+          "name": "duration"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:3667505851596243668",
+      "lastPropertyId": "4:4316655023557445188",
+      "name": "WeightHeight",
+      "properties": [
+        {
+          "id": "1:8549333710765134031",
+          "name": "id"
+        },
+        {
+          "id": "2:5076009567968889176",
+          "name": "weight"
+        },
+        {
+          "id": "3:5322468124723265934",
+          "name": "height"
+        },
+        {
+          "id": "4:4316655023557445188",
+          "name": "time"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "5:3667505851596243668",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [
+    5409111199339122655
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    531787943782392005,
+    7501381205193908175,
+    5395628553699116841,
+    530989978265192423
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
