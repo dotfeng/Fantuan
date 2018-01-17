@@ -742,9 +742,9 @@ public class MainActivity extends AppCompatActivity {
         sleepHandler.sendEmptyMessage(0);
         final boolean isSleep = sleep != null ? sleep.isSleep() : false;
 
-        sleepDialog.setTitle(isSleep ? R.string.sleep_last : R.string.wake_last);
+        sleepDialog.setTitle(isSleep ? R.string.wake_last : R.string.sleep_last);
         sleepDialog.setView(sleepView);
-        sleepDialog.setPositiveButton(isSleep ? R.string.wake : R.string.sleep,
+        sleepDialog.setPositiveButton(isSleep ? R.string.sleep : R.string.wake,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
