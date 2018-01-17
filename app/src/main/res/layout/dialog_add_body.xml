@@ -27,6 +27,16 @@
         android:inputType="numberDecimal"
         android:hint="@string/cm"
         android:textSize="24sp"/>
+    <EditText
+        android:id="@+id/et_temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingEnd="10dp"
+        android:gravity="center_vertical|end"
+        android:inputType="numberDecimal"
+        android:hint="@string/celsius"
+        android:textSize="24sp"/>
 
     <TimePicker
         android:id="@+id/tp_time"

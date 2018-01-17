@@ -26,10 +26,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.EntryXComparator;
 
 import net.fengg.app.AppApplication;
-import net.fengg.app.model.WeightHeight;
+import net.fengg.app.model.Body;
 import net.fengg.app.tool.Util;
 import net.fengg.app.model.EatMilk;
 import net.fengg.app.model.History;
@@ -40,7 +39,6 @@ import net.fengg.app.R;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -65,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
     Box<EatMilk> milkBox;
     Box<Shit> shitBox;
     Box<Sleep> sleepBox;
-    Box<WeightHeight> weightBox;
+    Box<Body> bodyBox;
 
     List<History> datas = new ArrayList<>();
     HistoryAdapter adapter;
@@ -92,7 +90,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
         milkBox = boxStore.boxFor(EatMilk.class);
         shitBox = boxStore.boxFor(Shit.class);
         sleepBox = boxStore.boxFor(Sleep.class);
-        weightBox = boxStore.boxFor(WeightHeight.class);
+        bodyBox = boxStore.boxFor(Body.class);
         mChart.setOnChartValueSelectedListener(this);
 
         // no description text
@@ -155,7 +153,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                                         adapter.notifyDataSetChanged();
                                         break;
 //                                    case 3:
-//                                        weightBox.remove(history.getId());
+//                                        bodyBox.remove(history.getId());
 //                                        getWeight();
 //                                        adapter.notifyDataSetChanged();
 //                                        break;
@@ -172,24 +170,24 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
     }
 
     private void setData() {
-        List<WeightHeight> weightHeightList = weightBox.getAll();
-        Collections.sort(weightHeightList);
-        Collections.reverse(weightHeightList);
-        LinkedHashMap<String, List<WeightHeight>> weightMap = new LinkedHashMap<>();
+        List<Body> bodyList = bodyBox.getAll();
+        Collections.sort(bodyList);
+        Collections.reverse(bodyList);
+        LinkedHashMap<String, List<Body>> bodyMap = new LinkedHashMap<>();
         SimpleDateFormat df = new SimpleDateFormat(dateFormat);
         List<String> dateList = new ArrayList<>();
-        for(int i = 0; i < weightHeightList.size();) {
-            List<WeightHeight> weightHeights = new ArrayList<>();
-            WeightHeight weightHeight = weightHeightList.get(i);
-            weightHeights.add(weightHeight);
-            String date1 = df.format(weightHeight.getTime());
+        for(int i = 0; i < bodyList.size();) {
+            List<Body> bodies = new ArrayList<>();
+            Body body = bodyList.get(i);
+            bodies.add(body);
+            String date1 = df.format(body.getTime());
             boolean inFor = false;
-            for(int j = i + 1; j < weightHeightList.size(); j++) {
+            for(int j = i + 1; j < bodyList.size(); j++) {
                 inFor = true;
-                WeightHeight weightHeight1 = weightHeightList.get(j);
-                String date2 = df.format(weightHeight1.getTime());
+                Body body1 = bodyList.get(j);
+                String date2 = df.format(body1.getTime());
                 if(date1.equals(date2)) {
-                    weightHeights.add(weightHeight1);
+                    bodies.add(body1);
                     i = j + 1;
                 } else {
                     i++;
@@ -199,7 +197,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
             if(!dateList.contains(date1)) {
                 dateList.add(date1);
             }
-            weightMap.put(date1, weightHeights);
+            bodyMap.put(date1, bodies);
             if(!inFor) {
                 break;
             }
@@ -209,33 +207,39 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
         }
         ArrayList<Entry> yVals1 = new ArrayList<>();
         ArrayList<Entry> yVals2 = new ArrayList<>();
+        ArrayList<Entry> yVals3 = new ArrayList<>();
         float maxWeight = 0;
         float maxHeight = 0;
 
         for(String date : dateList) {
-            List<WeightHeight> weightHeights = weightMap.get(date);
-            if(null != weightHeights && 0 != weightHeights.size()) {
+            List<Body> bodies = bodyMap.get(date);
+            if(null != bodies && 0 != bodies.size()) {
                 float weight = 0;
                 float height = 0;
-                for (WeightHeight weightHeight : weightHeights) {
-                    weight += weightHeight.getWeight();
-                    height += weightHeight.getHeight();
-                    if(maxWeight < weightHeight.getWeight()) {
-                        maxWeight = weightHeight.getWeight();
+                float temperature = 0;
+                for (Body body : bodies) {
+                    weight += body.getWeight();
+                    height += body.getHeight();
+                    temperature += body.getTemperature();
+                    if(maxWeight < body.getWeight()) {
+                        maxWeight = body.getWeight();
                     }
-                    if(maxHeight < weightHeight.getHeight()) {
-                        maxHeight = weightHeight.getHeight();
+                    if(maxHeight < body.getHeight()) {
+                        maxHeight = body.getHeight();
                     }
                 }
 
-                float x = TimeUnit.MILLISECONDS.toDays(weightHeights.get(0).getTime());
+                float x = TimeUnit.MILLISECONDS.toDays(bodies.get(0).getTime());
 
-                Entry entry1 = new Entry(x, height / weightHeights.size());
-                Entry entry2 = new Entry(x, weight / weightHeights.size());
-                entry1.setData(weightHeights.get(0));
-                entry2.setData(weightHeights.get(0));
+                Entry entry1 = new Entry(x, height / bodies.size());
+                Entry entry2 = new Entry(x, weight / bodies.size());
+                Entry entry3 = new Entry(x, temperature / bodies.size());
+                entry1.setData(bodies.get(0));
+                entry2.setData(bodies.get(0));
+                entry3.setData(bodies.get(0));
                 yVals1.add(entry1);
                 yVals2.add(entry2);
+                yVals3.add(entry3);
             }
         }
 //        Collections.sort(yVals1, new EntryXComparator());
@@ -302,19 +306,21 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
         rightAxis.setGranularityEnabled(false);
         rightAxis.setXOffset(10);
 
-        LineDataSet set1, set2;
+        LineDataSet set1, set2, set3;
 
         if (mChart.getData() != null &&
                 mChart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
             set2 = (LineDataSet) mChart.getData().getDataSetByIndex(1);
+            set3 = (LineDataSet) mChart.getData().getDataSetByIndex(2);
             set1.setValues(yVals1);
             set2.setValues(yVals2);
+            set3.setValues(yVals3);
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(yVals1, getString(R.string.weight));
+            set1 = new LineDataSet(yVals1, getString(R.string.height));
 
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
@@ -331,20 +337,31 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
             //set1.setCircleHoleColor(Color.WHITE);
 
             // create a dataset and give it a type
-            set2 = new LineDataSet(yVals2, getString(R.string.height));
+            set2 = new LineDataSet(yVals2, getString(R.string.weight));
             set2.setAxisDependency(YAxis.AxisDependency.RIGHT);
-            set2.setColor(Color.RED);
+            set2.setColor(Color.GREEN);
             set2.setCircleColor(Color.BLACK);
             set2.setLineWidth(2f);
             set2.setCircleRadius(3f);
             set2.setFillAlpha(65);
-            set2.setFillColor(Color.RED);
+            set2.setFillColor(Color.GREEN);
             set2.setDrawCircleHole(true);
             set2.setHighLightColor(Color.rgb(244, 117, 117));
             //set2.setFillFormatter(new MyFillFormatter(900f));
 
+            set3 = new LineDataSet(yVals3, getString(R.string.temperature));
+            set3.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set3.setColor(Color.RED);
+            set3.setCircleColor(Color.BLACK);
+            set3.setLineWidth(2f);
+            set3.setCircleRadius(3f);
+            set3.setFillAlpha(65);
+            set3.setFillColor(Color.RED);
+            set3.setDrawCircleHole(true);
+            set3.setHighLightColor(Color.rgb(244, 117, 117));
+
             // create a data object with the datasets
-            LineData data = new LineData(set1, set2);
+            LineData data = new LineData(set1, set2, set3);
             data.setValueTextColor(Color.BLACK);
             data.setValueTextSize(11f);
 
@@ -382,7 +399,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
         MenuItem eat = menu.findItem(R.id.action_eat);
         MenuItem sleep = menu.findItem(R.id.action_sleep);
         MenuItem shit = menu.findItem(R.id.action_shit);
-        MenuItem weight = menu.findItem(R.id.action_weight);
+        MenuItem body = menu.findItem(R.id.action_body);
         MenuItem statistics = menu.findItem(R.id.action_statistics);
         switch (item.getItemId()) {
             case R.id.action_shit:
@@ -391,7 +408,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 item.setChecked(true);
                 sleep.setChecked(false);
                 eat.setChecked(false);
-                weight.setChecked(false);
+                body.setChecked(false);
                 break;
             case R.id.action_sleep:
                 itemSelect = 1;
@@ -399,7 +416,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 item.setChecked(true);
                 shit.setChecked(false);
                 eat.setChecked(false);
-                weight.setChecked(false);
+                body.setChecked(false);
                 break;
             case R.id.action_eat:
                 itemSelect = 2;
@@ -407,9 +424,9 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 item.setChecked(true);
                 shit.setChecked(false);
                 sleep.setChecked(false);
-                weight.setChecked(false);
+                body.setChecked(false);
                 break;
-            case R.id.action_weight:
+            case R.id.action_body:
                 itemSelect = 3;
                 istatistics = false;
                 item.setChecked(true);
@@ -421,7 +438,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 istatistics = !istatistics;
                 shit.setChecked(false);
                 sleep.setChecked(false);
-                weight.setChecked(false);
+                body.setChecked(false);
                 if(istatistics) {
                     eat.setChecked(false);
                 } else {
@@ -437,7 +454,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 R.drawable.icons8_poo_grey_96);
         sleep.setIcon(sleep.isChecked() ? R.drawable.ic_sleep_black_48dp :
                 R.drawable.ic_sleep_grey600_48dp);
-        weight.setIcon(weight.isChecked() ? R.drawable.icons8_weightlifting_black :
+        body.setIcon(body.isChecked() ? R.drawable.icons8_weightlifting_black :
                 R.drawable.icons8_weightlifting_grey);
         lv_history.setVisibility(View.VISIBLE);
         mChart.setVisibility(View.GONE);
@@ -458,7 +475,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 getShit();
                 adapter.notifyDataSetChanged();
             }
-            if(weight.isChecked()) {
+            if(body.isChecked()) {
 //                getWeight();
 //                adapter.notifyDataSetChanged();
                 lv_history.setVisibility(View.GONE);
@@ -475,11 +492,11 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
         List<EatMilk> eatMilkList = milkBox.getAll();
         List<Sleep> sleepList = sleepBox.getAll();
         List<Shit> shitList = shitBox.getAll();
-        List<WeightHeight> weightHeightList = weightBox.getAll();
+        List<Body> bodyList = bodyBox.getAll();
         Collections.sort(eatMilkList);
         Collections.sort(sleepList);
         Collections.sort(shitList);
-        Collections.sort(weightHeightList);
+        Collections.sort(bodyList);
         SimpleDateFormat df = new SimpleDateFormat(dateFormat);
 
         List<String> dateList = new ArrayList<>();
@@ -592,19 +609,19 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
             }
         }
 
-        LinkedHashMap<String, List<WeightHeight>> weightMap = new LinkedHashMap<>();
-        for(int i = 0; i < weightHeightList.size();) {
-            List<WeightHeight> weightHeights = new ArrayList<>();
-            WeightHeight weightHeight = weightHeightList.get(i);
-            weightHeights.add(weightHeight);
-            String date1 = df.format(weightHeight.getTime());
+        LinkedHashMap<String, List<Body>> bodyMap = new LinkedHashMap<>();
+        for(int i = 0; i < bodyList.size();) {
+            List<Body> bodies = new ArrayList<>();
+            Body body = bodyList.get(i);
+            bodies.add(body);
+            String date1 = df.format(body.getTime());
             boolean inFor = false;
-            for(int j = i + 1; j < weightHeightList.size(); j++) {
+            for(int j = i + 1; j < bodyList.size(); j++) {
                 inFor = true;
-                WeightHeight weightHeight1 = weightHeightList.get(j);
-                String date2 = df.format(weightHeight1.getTime());
+                Body body1 = bodyList.get(j);
+                String date2 = df.format(body1.getTime());
                 if(date1.equals(date2)) {
-                    weightHeights.add(weightHeight1);
+                    bodies.add(body1);
                     i = j + 1;
                 } else {
                     i++;
@@ -614,7 +631,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
             if(!dateList.contains(date1)) {
                 dateList.add(date1);
             }
-            weightMap.put(date1, weightHeights);
+            bodyMap.put(date1, bodies);
             if(!inFor) {
                 break;
             }
@@ -688,18 +705,20 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
                 datas.add(history);
             }
 
-            List<WeightHeight> weightHeights = weightMap.get(date);
-            if(null != weightHeights && 0 != weightHeights.size()) {
+            List<Body> bodies = bodyMap.get(date);
+            if(null != bodies && 0 != bodies.size()) {
                 float weight = 0;
                 float height = 0;
-                for (WeightHeight weightHeight : weightHeights) {
-                    weight += weightHeight.getWeight();
-                    height += weightHeight.getHeight();
+                float temperature = 0;
+                for (Body body : bodies) {
+                    weight += body.getWeight();
+                    height += body.getHeight();
+                    temperature += body.getTemperature();
                 }
                 history = new History();
                 history.setStr1(date);
-                history.setStr2(weight / weightHeights.size() + "kg");
-                history.setStr3(height / weightHeights.size() + "cm");
+                history.setStr2(weight / bodies.size() + "kg," + height / bodies.size() + "cm");
+                history.setStr3(temperature / bodies.size() + getString(R.string.celsius));
                 datas.add(history);
             }
         }
@@ -756,11 +775,11 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
     }
 
     private void getWeight() {
-        List<WeightHeight> list = weightBox.getAll();
+        List<Body> list = bodyBox.getAll();
         Collections.sort(list);
         datas.clear();
         SimpleDateFormat df = new SimpleDateFormat(dateTimeFormat);
-        for(WeightHeight weightHeight : list) {
+        for(Body weightHeight : list) {
             History history = new History();
             history.setId(weightHeight.getId());
             history.setStr1(df.format(weightHeight.getTime()));
@@ -773,7 +792,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         SimpleDateFormat df = new SimpleDateFormat(dateTimeFormat, Locale.CHINA);
-        WeightHeight weightHeight = (WeightHeight) e.getData();
+        Body weightHeight = (Body) e.getData();
         Toast.makeText(this, df.format(weightHeight.getTime()) + "\n" + e.getY(), Toast.LENGTH_LONG).show();
     }
 

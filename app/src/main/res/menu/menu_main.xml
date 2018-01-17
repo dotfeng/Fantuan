@@ -14,9 +14,9 @@
         android:title="@string/sleep"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_weight"
+        android:id="@+id/action_body"
         android:icon="@drawable/icons8_weightlifting_grey"
-        android:title="@string/weight"
+        android:title="@string/body"
         android:visible="false"
         app:showAsAction="ifRoom" />
     <item
@@ -40,8 +40,8 @@
         android:title="@string/add_shit"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_add_weight"
+        android:id="@+id/action_add_body"
         android:icon="@drawable/icons8_weightlifting_grey"
-        android:title="@string/add_weight"
+        android:title="@string/add_body"
         app:showAsAction="never"/>
 </menu>

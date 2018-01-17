@@ -26,9 +26,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import net.fengg.app.AppApplication;
+import net.fengg.app.model.Body;
 import net.fengg.app.model.Shit_;
 import net.fengg.app.model.Sleep_;
-import net.fengg.app.model.WeightHeight;
 import net.fengg.app.tool.Util;
 import net.fengg.app.model.EatMilk;
 import net.fengg.app.model.History;
@@ -42,7 +42,6 @@ import net.fengg.tag.OnTagSelectListener;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     Box<EatMilk> milkBox;
     Box<Sleep> sleepBox;
     Box<Shit> shitBox;
-    Box<WeightHeight> weightBox;
+    Box<Body> bodyBox;
 
     List<History> datas = new ArrayList<>();
     HistoryAdapter adapter;
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         milkBox = boxStore.boxFor(EatMilk.class);
         sleepBox = boxStore.boxFor(Sleep.class);
         shitBox = boxStore.boxFor(Shit.class);
-        weightBox = boxStore.boxFor(WeightHeight.class);
+        bodyBox = boxStore.boxFor(Body.class);
 
         adapter = new HistoryAdapter(this, datas);
         lv_history.setAdapter(adapter);
@@ -209,8 +208,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_add_shit:
                 onMenuAddShitClick();
                 break;
-            case R.id.action_add_weight:
-                onMenuAddWeightClick();
+            case R.id.action_add_body:
+                onMenuAddBodyClick();
                 break;
             case R.id.action_shit:
                 onMenuShitClick();
@@ -218,8 +217,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_sleep:
                 onMenuSleepClick();
                 break;
-            case R.id.action_weight:
-                onMenuWeightClick();
+            case R.id.action_body:
+                onMenuBodyClick();
                 break;
             case R.id.action_history:
                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));
@@ -579,20 +578,21 @@ public class MainActivity extends AppCompatActivity {
         addShitDialog.show();
     }
 
-    private void onMenuAddWeightClick() {
-        AlertDialog.Builder addWeightDialog =
+    private void onMenuAddBodyClick() {
+        AlertDialog.Builder addBodyDialog =
                 new AlertDialog.Builder(MainActivity.this);
-        final View addWeightView = LayoutInflater.from(MainActivity.this)
-                .inflate(R.layout.dialog_add_weight, null);
-        addWeightDialog.setTitle(R.string.add_weight);
-        addWeightDialog.setView(addWeightView);
+        final View addBodyView = LayoutInflater.from(MainActivity.this)
+                .inflate(R.layout.dialog_add_body, null);
+        addBodyDialog.setTitle(R.string.add_body);
+        addBodyDialog.setView(addBodyView);
 
-        final EditText et_weight = addWeightView.findViewById(R.id.et_weight);
-        final EditText et_height = addWeightView.findViewById(R.id.et_height);
-        final TimePicker tp_time = addWeightView.findViewById(R.id.tp_time);
+        final EditText et_weight = addBodyView.findViewById(R.id.et_weight);
+        final EditText et_height = addBodyView.findViewById(R.id.et_height);
+        final EditText et_temperature = addBodyView.findViewById(R.id.et_temperature);
+        final TimePicker tp_time = addBodyView.findViewById(R.id.tp_time);
         tp_time.setIs24HourView(true);
 
-        addWeightDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        addBodyDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 long time = System.currentTimeMillis();
@@ -602,26 +602,30 @@ public class MainActivity extends AppCompatActivity {
                     calendar.set(Calendar.MINUTE, tp_time.getMinute());
                     time = calendar.getTimeInMillis();
                 }
-                WeightHeight weightHeight = new WeightHeight();
-                weightHeight.setTime(time);
+                Body body = new Body();
+                body.setTime(time);
                 String weight = et_weight.getEditableText().toString();
                 String height = et_height.getEditableText().toString();
+                String temperature = et_temperature.getEditableText().toString();
                 if(!TextUtils.isEmpty(weight)) {
-                    weightHeight.setWeight(Float.parseFloat(weight));
+                    body.setWeight(Float.parseFloat(weight));
                 }
                 if(!TextUtils.isEmpty(height)) {
-                    weightHeight.setHeight(Float.parseFloat(height));
+                    body.setHeight(Float.parseFloat(height));
                 }
-                weightBox.put(weightHeight);
+                if(!TextUtils.isEmpty(temperature)) {
+                    body.setTemperature(Float.parseFloat(temperature));
+                }
+                bodyBox.put(body);
             }
         });
-        addWeightDialog.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+        addBodyDialog.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        addWeightDialog.show();
+        addBodyDialog.show();
     }
 
     private void onMenuShitClick() {
@@ -767,41 +771,46 @@ public class MainActivity extends AppCompatActivity {
         sleepDialog.show();
     }
 
-    private void onMenuWeightClick() {
-        AlertDialog.Builder weightDialog =
+    private void onMenuBodyClick() {
+        AlertDialog.Builder bodyDialog =
                 new AlertDialog.Builder(MainActivity.this);
-        final View weightView = LayoutInflater.from(MainActivity.this)
-                .inflate(R.layout.dialog_weight, null);
-        weightDialog.setTitle(R.string.tip);
-        weightDialog.setView(weightView);
+        final View bodyView = LayoutInflater.from(MainActivity.this)
+                .inflate(R.layout.dialog_body, null);
+        bodyDialog.setTitle(R.string.tip);
+        bodyDialog.setView(bodyView);
 
-        final EditText et_weight = weightView.findViewById(R.id.et_weight);
-        final EditText et_height = weightView.findViewById(R.id.et_height);
+        final EditText et_weight = bodyView.findViewById(R.id.et_weight);
+        final EditText et_height = bodyView.findViewById(R.id.et_height);
+        final EditText et_temperature = bodyView.findViewById(R.id.et_temperature);
 
-        weightDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        bodyDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 long time = System.currentTimeMillis();
-                WeightHeight weightHeight = new WeightHeight();
-                weightHeight.setTime(time);
+                Body body = new Body();
+                body.setTime(time);
                 String weight = et_weight.getEditableText().toString();
                 String height = et_height.getEditableText().toString();
+                String temperature = et_temperature.getEditableText().toString();
                 if(!TextUtils.isEmpty(weight)) {
-                    weightHeight.setWeight(Float.parseFloat(weight));
+                    body.setWeight(Float.parseFloat(weight));
                 }
                 if(!TextUtils.isEmpty(height)) {
-                    weightHeight.setHeight(Float.parseFloat(height));
+                    body.setHeight(Float.parseFloat(height));
                 }
-                weightBox.put(weightHeight);
+                if(!TextUtils.isEmpty(temperature)) {
+                    body.setHeight(Float.parseFloat(temperature));
+                }
+                bodyBox.put(body);
             }
         });
-        weightDialog.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+        bodyDialog.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        weightDialog.show();
+        bodyDialog.show();
     }
 
     @OnClick(R.id.btn_eat)

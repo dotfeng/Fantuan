@@ -24,14 +24,17 @@
     <string name="bedelete">正在删除</string>
     <string name="delete">删除</string>
     <string name="statistics">统计</string>
+    <string name="body">体征</string>
     <string name="weight">体重</string>
     <string name="height">身高</string>
+    <string name="temperature">体温</string>
+    <string name="celsius">℃</string>
     <string name="kg">kg</string>
     <string name="cm">cm</string>
     <string name="add">补记</string>
     <string name="add_sleep">补记睡眠</string>
     <string name="add_eat">补记喂奶</string>
     <string name="add_shit">补记便便</string>
-    <string name="add_weight">补记体重</string>
+    <string name="add_body">补记体征</string>
     <string name="no_data">没有数据</string>
 </resources>

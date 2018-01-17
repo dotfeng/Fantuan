@@ -10,11 +10,12 @@ import io.objectbox.annotation.Id;
  * @date 2018/1/10
  */
 @Entity
-public class WeightHeight implements Comparable<WeightHeight> {
+public class Body implements Comparable<Body> {
     @Id
     long id;
     float weight;
     float height;
+    float temperature;
     long time;
 
     public long getId() {
@@ -41,6 +42,14 @@ public class WeightHeight implements Comparable<WeightHeight> {
         this.height = height;
     }
 
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
+    }
+
     public long getTime() {
         return time;
     }
@@ -50,7 +59,7 @@ public class WeightHeight implements Comparable<WeightHeight> {
     }
 
     @Override
-    public int compareTo(@NonNull WeightHeight o) {
+    public int compareTo(@NonNull Body o) {
         int res = (int) (o.getTime() - this.getTime());
         return res;
     }

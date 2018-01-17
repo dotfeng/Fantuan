@@ -23,8 +23,8 @@
         android:checked="true"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_weight"
+        android:id="@+id/action_body"
         android:icon="@drawable/icons8_weightlifting_grey"
-        android:title="@string/weight"
+        android:title="@string/body"
         app:showAsAction="never" />
 </menu>
