@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -589,17 +590,20 @@ public class MainActivity extends AppCompatActivity {
         final EditText et_weight = addBodyView.findViewById(R.id.et_weight);
         final EditText et_height = addBodyView.findViewById(R.id.et_height);
         final EditText et_temperature = addBodyView.findViewById(R.id.et_temperature);
-        final TimePicker tp_time = addBodyView.findViewById(R.id.tp_time);
-        tp_time.setIs24HourView(true);
-
+        final DatePicker dp_date = addBodyView.findViewById(R.id.dp_date);
+        Calendar calendar = Calendar.getInstance();
+        dp_date.init(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH), null);
         addBodyDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 long time = System.currentTimeMillis();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, tp_time.getHour());
-                    calendar.set(Calendar.MINUTE, tp_time.getMinute());
+                    calendar.set(Calendar.YEAR, dp_date.getYear());
+                    calendar.set(Calendar.MONTH, dp_date.getMonth());
+                    calendar.set(Calendar.DAY_OF_MONTH, dp_date.getDayOfMonth());
                     time = calendar.getTimeInMillis();
                 }
                 Body body = new Body();

@@ -264,9 +264,7 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
         xAxis.setDrawGridLines(true);
 //        xAxis.setDrawAxisLine(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setValueFormatter(custom);
         xAxis.setGranularity(1);
-//        xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);
 //        xAxis.setAxisMinimum(0);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
@@ -276,16 +274,10 @@ public class HistoryActivity extends AppCompatActivity implements OnChartValueSe
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
 
-                long millis = TimeUnit.DAYS.toMillis((long) value+1);
+                long millis = TimeUnit.DAYS.toMillis((long) value);
                 return mFormat.format(new Date(millis));
             }
         });
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(weightHeightList.get(0).getTime());
-//        int day = calendar.get(Calendar.DATE);
-//        calendar.set(Calendar.DATE, day - 1);
-//
-//        xAxis.setAxisMinimum(calendar.getTimeInMillis());
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
