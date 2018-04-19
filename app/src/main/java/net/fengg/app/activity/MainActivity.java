@@ -934,7 +934,18 @@ public class MainActivity extends AppCompatActivity {
                     dialogInterface.dismiss();
                 }
             });
-            customizeDialog.show();
+
+            final AlertDialog alertDialog = customizeDialog.create();
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    Button btnPositive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    Button btnNegative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                    btnPositive.setTextSize(35);
+                    btnNegative.setTextSize(35);
+                }
+            });
+            alertDialog.show();
         }
     }
 
