@@ -25,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import net.fengg.app.AppApplication;
 import net.fengg.app.model.Body;
@@ -57,7 +58,22 @@ import io.objectbox.BoxStore;
 import io.objectbox.query.QueryBuilder;
 
 public class MainActivity extends AppCompatActivity {
-
+    @BindView(R.id.rg_left)
+    RadioGroup rg_left;
+    @BindView(R.id.rb_left)
+    RadioButton rb_left;
+    @BindView(R.id.rb_right)
+    RadioButton rb_right;
+    @BindView(R.id.ctv_milk)
+    CheckedTextView ctv_milk;
+    @BindView(R.id.tv_ml)
+    TextView tv_ml;
+    @BindView(R.id.et_ml)
+    EditText et_ml;
+    @BindView(R.id.tv_delete)
+    TextView tv_delete;
+    @BindView(R.id.tv_add)
+    TextView tv_add;
     @BindView(R.id.txt_count_time)
     TextView txt_count_time;
     @BindView(R.id.txt_last_count)
@@ -105,6 +121,26 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new HistoryAdapter(this, datas);
         lv_history.setAdapter(adapter);
+
+        et_ml.setSelection(et_ml.getText().length());
+        ctv_milk.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                ctv_milk.toggle();
+                if (ctv_milk.isChecked()) {
+                    et_ml.setEnabled(true);
+                    rg_left.clearCheck();
+                    Util.disableRadioGroup(rg_left);
+                    ctv_milk.setTextColor(getResources().getColor(R.color.black));
+                } else {
+                    et_ml.setEnabled(false);
+                    rg_left.check(R.id.rb_left);
+                    Util.enableRadioGroup(rg_left);
+                    ctv_milk.setTextColor(getResources().getColor(R.color.gray));
+                }
+            }
+        });
     }
 
     private void getMilk() {
@@ -129,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
             txt_count_time.setText("00:00:00");
         }
         if(eating) {
+            Util.disableRadioGroup(rg_left);
+            ctv_milk.setEnabled(false);
+            et_ml.setEnabled(false);
+
             btn_eat.setTextSize(32);
             if(left) {
                 btn_eat.setText(R.string.now_left);
@@ -139,6 +179,18 @@ public class MainActivity extends AppCompatActivity {
                     getResources().getDrawable(R.mipmap.ic_pause_grey600_48dp)
                     ,null,null,null);
         } else {
+
+            ctv_milk.setEnabled(true);
+            if (ctv_milk.isChecked()) {
+                et_ml.setEnabled(true);
+                rg_left.clearCheck();
+                ctv_milk.setTextColor(getResources().getColor(R.color.black));
+            } else {
+                Util.enableRadioGroup(rg_left);
+                rg_left.check(left ? R.id.rb_right : R.id.rb_left);
+                ctv_milk.setTextColor(getResources().getColor(R.color.gray));
+            }
+
             btn_eat.setText(R.string.eat);
             btn_eat.setTextSize(48);
             btn_eat.setCompoundDrawablesWithIntrinsicBounds(
@@ -148,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         eatHandler.sendEmptyMessage(0);
 //        List<EatMilk> list = milkBox.getAll();
         builder = milkBox.query();
-        List<EatMilk> list = builder.orderDesc(EatMilk_.end).build().find(0, 6);
+        List<EatMilk> list = builder.orderDesc(EatMilk_.end).build().find(0, 3);
 
 //        Collections.sort(list);
         datas.clear();
@@ -171,7 +223,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         getMilk();
+    }
+
+    @OnClick(R.id.tv_delete)
+    public void onDelete(View view) {
+        if(ctv_milk.isChecked()) {
+            try {
+                int ml = Integer.parseInt(et_ml.getEditableText().toString());
+                if(ml > 5) {
+                    ml -= 5;
+                    et_ml.setText(ml + "");
+                    et_ml.setSelection(et_ml.getText().length());
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    @OnClick(R.id.tv_add)
+    public void onAdd(View view) {
+        if(ctv_milk.isChecked()) {
+            try {
+                int ml = Integer.parseInt(et_ml.getEditableText().toString());
+                if(ml < 0) {
+                    ml = 0;
+                }
+                if(ml < 1000) {
+                    ml += 5;
+                    et_ml.setText(ml + "");
+                    et_ml.setSelection(et_ml.getText().length());
+                } else {
+                    Toast.makeText(this, "请适度喂养", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                et_ml.setText("60");
+                et_ml.setSelection(et_ml.getText().length());
+            }
+        }
     }
 
     @Override
@@ -223,6 +314,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_history:
                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                break;
+            case R.id.action_easy:
+                startActivity(new Intent(MainActivity.this, EasyActivity.class));
                 break;
             default:
                 break;
@@ -613,12 +707,18 @@ public class MainActivity extends AppCompatActivity {
                 String temperature = et_temperature.getEditableText().toString();
                 if(!TextUtils.isEmpty(weight)) {
                     body.setWeight(Float.parseFloat(weight));
+                } else {
+                    body.setWeight(6.0f);
                 }
                 if(!TextUtils.isEmpty(height)) {
                     body.setHeight(Float.parseFloat(height));
+                } else {
+                    body.setHeight(60f);
                 }
                 if(!TextUtils.isEmpty(temperature)) {
                     body.setTemperature(Float.parseFloat(temperature));
+                } else {
+                    body.setTemperature(36.6f);
                 }
                 bodyBox.put(body);
             }
@@ -798,12 +898,18 @@ public class MainActivity extends AppCompatActivity {
                 String temperature = et_temperature.getEditableText().toString();
                 if(!TextUtils.isEmpty(weight)) {
                     body.setWeight(Float.parseFloat(weight));
+                } else {
+                    body.setWeight(6.0f);
                 }
                 if(!TextUtils.isEmpty(height)) {
                     body.setHeight(Float.parseFloat(height));
+                } else {
+                    body.setHeight(60f);
                 }
                 if(!TextUtils.isEmpty(temperature)) {
-                    body.setHeight(Float.parseFloat(temperature));
+                    body.setTemperature(Float.parseFloat(temperature));
+                } else {
+                    body.setTemperature(36.6f);
                 }
                 bodyBox.put(body);
             }
@@ -829,18 +935,8 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean(EATING, false);
             editor.commit();
 
-            btn_eat.setText(R.string.eat);
-            btn_eat.setTextSize(48);
-            btn_eat.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable(R.mipmap.ic_play_grey600_48dp)
-            ,null,null,null);
-
             long start = sp.getLong(EAT_START,0);
             boolean left = sp.getBoolean(LEFT, true);
-
-            txt_last_count.setText(left ? R.string.left : R.string.right);
-            SimpleDateFormat df = new SimpleDateFormat(timeFormat, Locale.CHINA);
-            txt_last_time.setText(df.format(time));
 
             EatMilk milk = new EatMilk();
             milk.setStart(start);
@@ -849,104 +945,43 @@ public class MainActivity extends AppCompatActivity {
             milk.setLeft(left);
             milkBox.put(milk);
 
-            getMilk();
-            adapter.notifyDataSetChanged();
             eatHandler.sendEmptyMessage(0);
         } else {
-            final AlertDialog.Builder customizeDialog =
-                    new AlertDialog.Builder(MainActivity.this);
-            final View dialogView = LayoutInflater.from(MainActivity.this)
-                    .inflate(R.layout.dialog_eat, null);
-            customizeDialog.setTitle(R.string.tip);
-            customizeDialog.setView(dialogView);
-            final CheckedTextView ctv_milk = dialogView.findViewById(R.id.ctv_milk);
-            final EditText et_ml = dialogView.findViewById(R.id.et_ml);
-            et_ml.setSelection(et_ml.getText().length());
-            final RadioGroup rg_left = dialogView.findViewById(R.id.rg_left);
-            RadioButton rb_left = dialogView.findViewById(R.id.rb_left);
-            RadioButton rb_right = dialogView.findViewById(R.id.rb_right);
-            boolean left = sp.getBoolean(LEFT, true);
-            rg_left.check(left ? R.id.rb_right : R.id.rb_left);
-
-            ctv_milk.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    ctv_milk.toggle();
-                    if (ctv_milk.isChecked()) {
-                        et_ml.setEnabled(true);
-                        rg_left.clearCheck();
-                        Util.disableRadioGroup(rg_left);
-                    } else {
-                        et_ml.setEnabled(false);
-                        rg_left.check(R.id.rb_left);
-                        Util.enableRadioGroup(rg_left);
+            if (ctv_milk.isChecked()) {
+                final long time = System.currentTimeMillis();
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putLong(EAT_END, time);
+                String ml = et_ml.getEditableText().toString();
+                if(!TextUtils.isEmpty(ml)) {
+                    try {
+                        editor.putInt(MILK, Integer.parseInt(ml));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-            });
+                editor.commit();
 
-            customizeDialog.setPositiveButton(R.string.ok,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (ctv_milk.isChecked()) {
-                                final long time = System.currentTimeMillis();
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putLong(EAT_END, time);
-                                EditText et_ml = dialogView.findViewById(R.id.et_ml);
-                                String ml = et_ml.getEditableText().toString();
-                                if(!TextUtils.isEmpty(ml)) {
-                                    try {
-                                        editor.putInt(MILK, Integer.parseInt(ml));
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                editor.commit();
+                EatMilk milk = new EatMilk();
+                milk.setStart(time);
+                milk.setEnd(time);
+                milk.setMl(Integer.parseInt(ml));
+                milkBox.put(milk);
+            } else {
+                long time = System.currentTimeMillis();
+                SharedPreferences.Editor editor = sp.edit();
 
-                                EatMilk milk = new EatMilk();
-                                milk.setStart(time);
-                                milk.setEnd(time);
-                                milk.setMl(Integer.parseInt(ml));
-                                milkBox.put(milk);
-                                getMilk();
-                            } else {
-                                final long time = System.currentTimeMillis();
-                                SharedPreferences.Editor editor = sp.edit();
-
-                                RadioGroup rg_left = dialogView.findViewById(R.id.rg_left);
-                                if (R.id.rb_left == rg_left.getCheckedRadioButtonId()) {
-                                    editor.putBoolean(LEFT, true);
-                                } else {
-                                    editor.putBoolean(LEFT, false);
-                                }
-                                editor.putLong(EAT_START, time);
-                                editor.putInt(MILK, 0);
-                                editor.putBoolean(EATING, true);
-                                editor.commit();
-                                getMilk();
-                            }
-                        }
-                    });
-            customizeDialog.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
+                if (R.id.rb_left == rg_left.getCheckedRadioButtonId()) {
+                    editor.putBoolean(LEFT, true);
+                } else {
+                    editor.putBoolean(LEFT, false);
                 }
-            });
-
-            final AlertDialog alertDialog = customizeDialog.create();
-            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialog) {
-                    Button btnPositive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                    Button btnNegative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                    btnPositive.setTextSize(35);
-                    btnNegative.setTextSize(35);
-                }
-            });
-            alertDialog.show();
+                editor.putLong(EAT_START, time);
+                editor.putInt(MILK, 0);
+                editor.putBoolean(EATING, true);
+                editor.commit();
+            }
         }
+        getMilk();
     }
 
     EatHandler eatHandler = new EatHandler(this);

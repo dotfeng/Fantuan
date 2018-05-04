@@ -10,13 +10,82 @@
     tools:context="net.fengg.app.activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <RadioGroup
+        android:id="@+id/rg_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rb_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/left"
+            android:textSize="32sp"
+            android:checked="true"/>
+        <RadioButton
+            android:id="@+id/rb_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="@string/right"
+            android:textSize="32sp"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal">
+
+        <CheckedTextView
+            android:id="@+id/ctv_milk"
+            android:textAlignment="center"
+            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/milk"
+            android:textSize="32sp"/>
+        <TextView
+            android:id="@+id/tv_ml"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ml"
+            android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:text="-"
+            android:textSize="32sp"/>
+        <EditText
+            android:id="@+id/et_ml"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="phone"
+            android:text="60"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:hint="@string/ml"/>
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:text="+"
+            android:textSize="32sp"/>
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_eat"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginEnd="50dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="2dp"
         android:drawableStart="@mipmap/ic_play_black_48dp"
         android:text="@string/eat"
         android:textSize="48sp" />

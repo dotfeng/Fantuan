@@ -2,11 +2,12 @@
     <string name="app_name">喂饭团</string>
     <string name="title_activity_main">喂饭团</string>
     <string name="title_activity_history">历史记录</string>
+    <string name="title_easy">E.A.S.Y</string>
     <string name="eat">喂奶</string>
     <string name="left">左侧</string>
     <string name="right">右侧</string>
     <string name="milk">奶粉</string>
-    <string name="ml">60ml</string>
+    <string name="ml">60</string>
     <string name="ok">确定</string>
     <string name="tip">提示</string>
     <string name="now_left">正在喂左侧</string>

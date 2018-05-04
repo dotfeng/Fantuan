@@ -44,4 +44,9 @@
         android:icon="@drawable/icons8_weightlifting_grey"
         android:title="@string/add_body"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_easy"
+        android:icon="@drawable/icons8_easy_gray"
+        android:title="@string/title_easy"
+        app:showAsAction="never"/>
 </menu>
